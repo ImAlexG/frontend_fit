@@ -1,6 +1,30 @@
-import { BASE_URL } from "../../api";
+import { useState } from "react";
+import api, { BASE_URL } from "../../api";
 
-const CartItem = ({item}) => {
+const CartItem = ({item, setCartTotal, cartitems, setNumberCartItems}) => {
+
+  const [quantity, setQuantity] = useState(item.quantity)
+  const [loading, setLoading] = useState(false)
+
+  const itemData = {quantity:quantity, item_id:item.id}
+
+  function updateCartitem(){
+    setLoading(true)
+    api.patch("update_quantity/", itemData)
+    .then(res => 
+    {
+      setLoading(false)
+      console.log(res.data)
+      setCartTotal(cartitems.map((cartitem)=> cartitem.id === item.id ? res.data.data : cartitem).reduce((acc, curr) => acc + curr.total, 0))
+
+      setNumberCartItems(cartitems.map((cartitem) => cartitem.id === item.id ? res.data.data : cartitem).reduce((acc, curr) => acc + curr.quantity, 0))
+    })
+    .catch(err => {
+      console.log(err.message)
+      setLoading(false)
+    })
+  }
+
   return (
     <div className="col-md-12">
       {/* Cart Items */}
@@ -23,11 +47,13 @@ const CartItem = ({item}) => {
         <div className="d-flex align-items-center">
           <input
             type="number"
+            min="1"
             className="form-control me-3"
-            defaultValue="1"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
             style={{ width: '70px' }}
           />
-
+          <button className="btn  btn-sm mx-2" onClick={updateCartitem} style={{backgroundColor: "#4b3bcb", color:"white"}} disabled={loading}>{loading ? "Updating" : "Update"}</button>
           <button className="btn btn-danger btn-sm">Remove</button>
         </div>
       </div>

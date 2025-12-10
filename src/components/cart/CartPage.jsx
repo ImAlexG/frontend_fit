@@ -4,7 +4,7 @@ import CartSummary from './CartSummary'
 import api from "../../api"
 
 
-const CartPage = () => {
+const CartPage = ({setNumberCartItems}) => {
 
     const cart_code = localStorage.getItem("cart_code")
     const [cartitems, setCartItems] = useState([])
@@ -36,7 +36,7 @@ const CartPage = () => {
             <h5 className="mb-4">Shopping Cart</h5>
             <div className="row">
                 <div className="col-md-8">
-                    {cartitems.map(item => <CartItem  key={item.id} item={item}/>)}
+                    {cartitems.map(item => <CartItem  key={item.id} item={item} cartitems={cartitems} setCartTotal={setCartTotal} setNumberCartItems={setNumberCartItems}/>)}
                     
                 </div>
 
