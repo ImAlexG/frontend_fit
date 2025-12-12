@@ -4,6 +4,7 @@ import RelatedProducts from './RelatedProducts'
 import { useParams } from 'react-router-dom'
 import { BASE_URL } from '../../api'
 import api from '../../api'
+import { toast } from 'react-toastify'
 
 const ProductPage = ({setNumberCartItems}) => {
     const {slug} = useParams()
@@ -35,6 +36,7 @@ const ProductPage = ({setNumberCartItems}) => {
         .then(res => {
             console.log(res.data)
             setInCart(true)
+            toast.success("Articulo añadido con exito al carrito")
             setNumberCartItems(curr => curr + 1)
         })
         .catch(err => {
@@ -83,7 +85,7 @@ const ProductPage = ({setNumberCartItems}) => {
             </div>
 
             <div className="col-md-6">
-              <div className="small mb-1">SKU: BST-498</div>
+              <div className="small mb-1">SKU: {product.slug}</div>
               <h1 className="display-5 fw-bolder">{product.name}</h1>
 
               <div className="fs-5 mb-5">

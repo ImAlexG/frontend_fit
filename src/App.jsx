@@ -6,6 +6,11 @@ import NotFoundPage from './components/ui/NotFoundPage';
 import ProductPage from './components/product/ProductPage';
 import api from './api';
 import CartPage from './components/cart/CartPage';
+import CheckoutPage from './components/checkout/CheckoutPage';
+import LoginPage from './user/LoginPage';
+import ProtectedRoute from './components/ui/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
+import UserProfilePage from './user/UserProfilePage';
 
 const App = () => {
   const [numCartItems, setNumberCartItems] = useState(0);
@@ -30,16 +35,25 @@ const App = () => {
   }, [])
 
   return (
+    <AuthProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainLayout  numCartItems={numCartItems}/>}>
         <Route index element={<HomePage />} />
         <Route  path='products/:slug' element={<ProductPage setNumberCartItems={setNumberCartItems}/>} />
         <Route path='cart' element={<CartPage setNumberCartItems={setNumberCartItems}/>}/>
+        <Route path='checkout' element={
+          <ProtectedRoute>
+            <CheckoutPage/>
+            </ProtectedRoute>}/>
+        <Route path='login' element={<LoginPage/>}/>
+        <Route path='profile' element={<UserProfilePage/>}/>
         <Route path='*' element={<NotFoundPage/>}/>
+
         </Route>
       </Routes>
     </BrowserRouter>
+    </AuthProvider>
   );
 };
 

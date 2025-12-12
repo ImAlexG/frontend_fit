@@ -1,12 +1,36 @@
 import { useState } from "react";
 import api, { BASE_URL } from "../../api";
+import { toast } from "react-toastify";
 
-const CartItem = ({item, setCartTotal, cartitems, setNumberCartItems}) => {
+const CartItem = ({item, setCartTotal, setCartItems, cartitems, setNumberCartItems}) => {
 
   const [quantity, setQuantity] = useState(item.quantity)
   const [loading, setLoading] = useState(false)
 
   const itemData = {quantity:quantity, item_id:item.id}
+  const itemID = {item_id: item.id}
+
+  function deleteCartitem(){
+    const confirmDelete = window.confirm("¿Esta seguro que quieres eliminar este producto de tu carrito?")
+    console.log(itemID)
+
+    if(confirmDelete){
+      api.post("delete_cartitem/", itemID)
+      .then(res => {
+        console.log(res.data)
+        toast.success("Eliminado del carrito exitosamente")
+        setCartItems(cartitems.filter(cartitem => cartitem.id != item.id))
+        setCartTotal(cartitems.filter((cartitem)=> cartitem.id != item.id ).reduce((acc, curr) => acc + curr.total, 0))
+
+        setNumberCartItems(cartitems.filter((cartitem) => cartitem.id != item.id ).reduce((acc, curr) => acc + curr.quantity, 0))
+ 
+      })
+
+      .catch(err => {
+        console.log(err.message)
+      })
+    }
+  }
 
   function updateCartitem(){
     setLoading(true)
@@ -14,6 +38,7 @@ const CartItem = ({item, setCartTotal, cartitems, setNumberCartItems}) => {
     .then(res => 
     {
       setLoading(false)
+      toast.success("Cantidad modificada exitosamente")
       console.log(res.data)
       setCartTotal(cartitems.map((cartitem)=> cartitem.id === item.id ? res.data.data : cartitem).reduce((acc, curr) => acc + curr.total, 0))
 
@@ -54,7 +79,7 @@ const CartItem = ({item, setCartTotal, cartitems, setNumberCartItems}) => {
             style={{ width: '70px' }}
           />
           <button className="btn  btn-sm mx-2" onClick={updateCartitem} style={{backgroundColor: "#4b3bcb", color:"white"}} disabled={loading}>{loading ? "Updating" : "Update"}</button>
-          <button className="btn btn-danger btn-sm">Remove</button>
+          <button className="btn btn-danger btn-sm" onClick={deleteCartitem}>Eliminar</button>
         </div>
       </div>
     </div>

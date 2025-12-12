@@ -2,6 +2,7 @@
 import { Link, NavLink } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import styles from "./NavBar.module.css";
+import NavLinks from "./NavLink";
 
 const NavBar = ({numCartItems}) => {
   return (
@@ -24,28 +25,16 @@ const NavBar = ({numCartItems}) => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarContent">
-          <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <NavLink className="nav-link" to="/">
                 Inicio
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/productos">
-                Productos
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/nosotros">
-                Nosotros
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/contacto">
-                Contacto
-              </NavLink>
-            </li>
+            
           </ul>
+
+          <NavLinks />
 
           <Link
             to="/cart"

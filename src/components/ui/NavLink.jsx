@@ -1,40 +1,69 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, {  useContext } from "react";
+import { NavLink as RRNavLink } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
-const NavLink = () => {
+const NavLinks = () => {
+
+  const { isAuthenticated, setIsAuthenticated, username } = useContext(AuthContext);
+
+  function logout() {
+    localStorage.removeItem("access");
+    setIsAuthenticated(false);
+  }
+
   return (
     <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-      <li className="nav-item">
-        <Link to="/" className="nav-link active fw-semibold">
-          Home
-        </Link>
+      {isAuthenticated ? (
+            <>
+            <li className="nav-item">
+              <RRNavLink
+                to="/profile"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active fw-semibold" : "nav-link fw-semibold"
+                }
+              >
+                {`Hi ${username}`}
+              </RRNavLink>
+            </li>
+
+            <li className="nav-item" onClick={logout}>
+              <RRNavLink
+                to="/"
+                className={({ isActive }) =>
+                  isActive ? "nav-link active fw-semibold" : "nav-link fw-semibold"
+                }
+              >
+                Logout
+              </RRNavLink>
+            </li>
+            </>
+      ) : (
+            <>
+            <li className="nav-item">
+        <RRNavLink
+          to="/login"
+          className={({ isActive }) =>
+            isActive ? "nav-link active fw-semibold" : "nav-link fw-semibold"
+          }
+        >
+          Login
+        </RRNavLink>
       </li>
 
       <li className="nav-item">
-        <Link to="/shop" className="nav-link fw-semibold">
-          Shop
-        </Link>
+        <RRNavLink
+          to="/register"
+          className={({ isActive }) =>
+            isActive ? "nav-link active fw-semibold" : "nav-link fw-semibold"
+          }
+        >
+          Register
+        </RRNavLink>
       </li>
-
-      <li className="nav-item">
-        <Link to="/about" className="nav-link fw-semibold">
-          About
-        </Link>
-      </li>
-
-      <li className="nav-item">
-        <Link to="/contact" className="nav-link fw-semibold">
-          Contact
-        </Link>
-      </li>
-
-      <li className="nav-item">
-        <Link to="/profile" className="nav-link fw-semibold">
-          Profile
-        </Link>
-      </li>
+            </>
+      )}
     </ul>
   );
 };
 
-export default NavLink;
+export default NavLinks;
